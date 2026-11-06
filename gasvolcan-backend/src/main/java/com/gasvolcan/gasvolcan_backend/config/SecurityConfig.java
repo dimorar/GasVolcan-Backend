@@ -1,6 +1,7 @@
 package com.gasvolcan.gasvolcan_backend.config;
 
 import com.gasvolcan.gasvolcan_backend.security.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,9 +18,14 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
+    private final String origin;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtFilter) {
+    public SecurityConfig(
+        JwtAuthenticationFilter jwtFilter,
+        @Value("${app.cors.allowed-origin}") String origin
+    ) {
         this.jwtFilter = jwtFilter;
+        this.origin = origin;
     }
 
     @Bean
@@ -63,12 +69,13 @@ public class SecurityConfig {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:4173"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        CorsConfiguration c = new CorsConfiguration();
+        c.setAllowedOrigins(List.of(origin));
+        c.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        c.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        c.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", config);
+        source.registerCorsConfiguration("/**", c);
         return source;
     }
 }
