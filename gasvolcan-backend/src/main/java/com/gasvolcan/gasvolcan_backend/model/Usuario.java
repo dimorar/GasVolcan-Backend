@@ -9,14 +9,17 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String nombre;
 
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Rol rol;
 
     private boolean activo = true;
@@ -41,4 +44,4 @@ public class Usuario {
     public void setPassword(String password) { this.password = password; }
     public void setRol(Rol rol) { this.rol = rol; }
     public void setActivo(boolean activo) { this.activo = activo; }
-    }
+}

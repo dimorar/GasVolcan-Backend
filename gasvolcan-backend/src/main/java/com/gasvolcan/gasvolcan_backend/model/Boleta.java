@@ -19,7 +19,7 @@ public class Boleta {
     @ManyToOne
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "boleta", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "boleta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleBoleta> detalles = new ArrayList<>();
 
     protected Boleta() {}
